@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
 from vinegar_cellar.models import BarrelSet, Barrel
-from .serializers import BarrelSetSerializer
+from .serializers import BarrelSetSerializer, BarrelSerializer
 
 class BarrelSetViewSet(viewsets.ModelViewSet):
     """
@@ -9,6 +9,14 @@ class BarrelSetViewSet(viewsets.ModelViewSet):
     """
     serializer_class = BarrelSetSerializer
     queryset = BarrelSet.objects.all()
+
+
+class BarrelViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing user instances.
+    """
+    serializer_class = BarrelSerializer
+    queryset = Barrel.objects.all()
 
 
 #from rest_framework.generics import (
