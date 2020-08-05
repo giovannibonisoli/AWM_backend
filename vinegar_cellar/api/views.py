@@ -1,7 +1,9 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 
-from vinegar_cellar.models import BarrelSet, Barrel
-from .serializers import BarrelSetSerializer, BarrelSerializer
+from vinegar_cellar.models import BarrelSet, Barrel, OperationType, Operation
+from .serializers import (BarrelSetSerializer, BarrelSerializer,
+                            OperationTypeSerializer, OperationSerializer)
 
 class BarrelSetViewSet(viewsets.ModelViewSet):
     """
@@ -19,33 +21,17 @@ class BarrelViewSet(viewsets.ModelViewSet):
     queryset = Barrel.objects.all()
 
 
-#from rest_framework.generics import (
-#    ListAPIView,
-#    RetrieveAPIView,
-#    CreateAPIView,
-#    DestroyAPIView,
-#    UpdateAPIView
-#    )
+class OperationTypeViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing user instances.
+    """
+    serializer_class = OperationTypeSerializer
+    queryset = OperationType.objects.all()
 
 
-#class ArticleListView(ListAPIView):
-#    queryset = Article.objects.all()
-#    serializer_class = ArticleSerializer
-
-
-#class ArticleDetailView(RetrieveAPIView):
-#    queryset = Article.objects.all()
-#    serializer_class = ArticleSerializer
-
-
-#class ArticleCreateView(CreateAPIView):
-#    queryset = Article.objects.all()
-#    serializer_class = ArticleSerializer
-
-#class ArticleUpdateView(UpdateAPIView):
-#    queryset = Article.objects.all()
-#    serializer_class = ArticleSerializer
-
-#class ArticleDeleteView(DestroyAPIView):
-#    queryset = Article.objects.all()
-#    serializer_class = ArticleSerializer
+class OperationViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing user instances.
+    """
+    serializer_class = OperationSerializer
+    queryset = Operation.objects.all()
