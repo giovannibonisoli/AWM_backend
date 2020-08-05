@@ -22,5 +22,5 @@ class OperationTypeSerializer(serializers.ModelSerializer):
 
 class OperationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = OperationType
+        model = Operation
         fields = ('id', 'type', 'barrel', 'date', 'values')
