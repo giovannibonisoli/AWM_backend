@@ -29,12 +29,15 @@ class OperationViewSet(mixins.CreateModelMixin,
     serializer_class = OperationSerializer
     queryset = Operation.objects.all()
 
-    @action(detail=False, url_path='(?P<name>[a-z]+)')
-    def get_operations_by_type(self, request, name):
+    @action(detail=False, url_path='(?P<name>[a-z]+)(/(?P<pk>[^/.]+))?')
+    def get_operations_by_type(self, request, name, pk=None):
         res = self.queryset.filter(type=name)
-        page = self.paginate_queryset(res)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(res, many=True)
+        if pk is not None:
+            try:
+                res = res.get(pk=pk)
+                serializer = self.get_serializer(res, many=False)
+            except Operation.DoesNotExist:
+                return Response({'detail': 'Not found'})
+        else:
+            serializer = self.get_serializer(res, many=True)
         return Response(serializer.data)
