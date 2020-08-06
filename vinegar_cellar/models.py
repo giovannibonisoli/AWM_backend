@@ -19,7 +19,7 @@ class Barrel(models.Model):
     capability = models.PositiveIntegerField()
 
 class OperationType(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, primary_key=True)
     schema = JSONField(default=[])
 
 class Operation(models.Model):
