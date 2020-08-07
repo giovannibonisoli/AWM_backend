@@ -25,7 +25,7 @@ class OperationTests(APITestCase):
                 Barrel.objects.create(barrel_set=barset, wood_type=wood,
                                       capability=70)
 
-    def test_get_on_operation_set(self):
+    def test_set_get(self):
         response = self.client.get('/api/operations/prelievo/', format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
@@ -34,7 +34,7 @@ class OperationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
-    def test_post_on_operation_set(self):
+    def test_set_post(self):
         data = {
                 "type": "rabbocco",
                 "barrel": 1,
@@ -44,6 +44,18 @@ class OperationTests(APITestCase):
         response = self.client.post('/api/operations/prelievo/', data=data,
                                     format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['detail'], "Only \"prelievo\" are " +
-                                                  "accepted at this endpoint")
         self.assertEqual(Operation.objects.count(), 0)
+
+    def test_detail_get(self):
+        operation = OperationType.objects.get(name="rabbocco")
+        barrel = Barrel.objects.get(pk=1)
+        date = datetime.today().strftime('%Y-%m-%d')
+        instance = Operation.objects.create(type=operation,
+                                            barrel=barrel,
+                                            date=date,
+                                            values="{}")
+        response = self.client.get('/api/operations/rabbocco/' + str(instance.id) + '/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['barrel'], 1)
+        self.assertEqual(response.data['date'], date)
+        self.assertEqual(response.data['values'], "{}")
