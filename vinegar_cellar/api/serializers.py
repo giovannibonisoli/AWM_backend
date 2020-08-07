@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from vinegar_cellar.models import BarrelSet, Barrel, OperationType, Operation
 
+
 class BarrelSetSerializer(serializers.ModelSerializer):
     class Meta:
         model = BarrelSet

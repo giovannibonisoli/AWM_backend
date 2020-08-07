@@ -5,7 +5,8 @@ from django.forms import model_to_dict
 
 from vinegar_cellar.models import BarrelSet, Barrel, OperationType, Operation
 from .serializers import (BarrelSetSerializer, BarrelSerializer,
-                            OperationTypeSerializer, OperationSerializer)
+                          OperationTypeSerializer, OperationSerializer)
+
 
 class BarrelSetViewSet(viewsets.ModelViewSet):
     serializer_class = BarrelSetSerializer
@@ -21,15 +22,17 @@ class OperationTypeViewSet(viewsets.ModelViewSet):
     serializer_class = OperationTypeSerializer
     queryset = OperationType.objects.all()
 
+
 class OperationModelSet(viewsets.ModelViewSet):
     serializer_class = OperationSerializer
     queryset = Operation.objects.all()
+
 
 class OperationViewSet(viewsets.GenericViewSet):
     serializer_class = OperationSerializer
     queryset = Operation.objects.all()
 
-    @action(detail=False, methods=['get','post'], url_path='(?P<name>[a-z]+)')
+    @action(detail=False, methods=['get', 'post'], url_path='(?P<name>[a-z]+)')
     def operation_list(self, request, name):
         if request.method == 'GET':
             res = self.queryset.filter(type=name)
@@ -38,13 +41,16 @@ class OperationViewSet(viewsets.GenericViewSet):
 
         else:
             if name != request.data['type']:
-                return Response(data={'detail': 'Only "' + name + '" are accepted at this endpoint'}, status=400)
+                return Response(data={'detail': ('Only "' + name + '" are ' +
+                                      'accepted at this endpoint')},
+                                status=400)
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             instance = serializer.save()
             return Response(model_to_dict(instance))
 
-    @action(detail=False, methods=['get','put','delete'], url_path='(?P<name>[a-z]+)/(?P<pk>[^/.]+)')
+    @action(detail=False, methods=['get', 'put', 'delete'],
+            url_path='(?P<name>[a-z]+)/(?P<pk>[^/.]+)')
     def operation_instance(self, request, name, pk=None):
         set = self.queryset.filter(type=name)
         try:
