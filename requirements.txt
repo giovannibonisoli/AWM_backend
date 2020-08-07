@@ -1,2 +1,4 @@
 django
 django-restframework
+django-jsonfield
+djangorestframework-simplejwt
