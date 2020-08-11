@@ -1,3 +1,4 @@
+from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -13,7 +14,19 @@ class BarrelSetViewSet(viewsets.ModelViewSet):
     queryset = BarrelSet.objects.all()
 
 
-class BarrelViewSet(viewsets.ModelViewSet):
+class BarrelViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin,
+                    mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    serializer_class = BarrelSerializer
+    queryset = Barrel.objects.all()
+
+    @action(detail=False, url_path='set/(?P<pk>[^/.]+)')
+    def operation_list(self, request, pk):
+        res = Barrel.objects.filter(barrel_set=pk)
+        serializer = self.get_serializer(res, many=True)
+        return Response(serializer.data)
+
+
+class BarrelModelSet(viewsets.ModelViewSet):
     serializer_class = BarrelSerializer
     queryset = Barrel.objects.all()
 
