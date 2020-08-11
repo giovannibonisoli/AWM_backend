@@ -18,7 +18,7 @@ class BarrelSerializer(serializers.ModelSerializer):
 class OperationTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = OperationType
-        fields = ('name', 'schema')
+        fields = ('id', 'schema')
 
 
 class OperationSerializer(serializers.ModelSerializer):

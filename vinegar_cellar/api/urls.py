@@ -4,10 +4,10 @@ from .views import (BarrelSetViewSet, BarrelViewSet,
                     OperationTypeViewSet, OperationViewSet, OperationModelSet)
 
 router = DefaultRouter()
-router.register(r'barrel_sets', BarrelSetViewSet, basename='barrel_sets')
-router.register(r'barrels', BarrelViewSet, basename='barrels')
+router.register(r'barrel_set', BarrelSetViewSet, basename='barrel_set')
+router.register(r'barrel', BarrelViewSet, basename='barrel')
 router.register(r'operation_type', OperationTypeViewSet,
                 basename='operation_type')
-router.register(r'operations', OperationViewSet, basename='operations')
+router.register(r'operation', OperationViewSet, basename='operation')
 router.register(r'opmodel', OperationModelSet, basename='opmodel')
 urlpatterns = router.urls

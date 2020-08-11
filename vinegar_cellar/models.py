@@ -1,6 +1,5 @@
 from django.db import models
 from jsonfield import JSONField
-
 from django.core.validators import MaxValueValidator, MinValueValidator
 import datetime
 
@@ -14,18 +13,20 @@ def max_value_current_year(value):
 
 
 class BarrelSet(models.Model):
+    id = models.PositiveIntegerField(primary_key=True)
     year = models.IntegerField(('year'), validators=[MinValueValidator(1984),
                                                      max_value_current_year])
 
 
 class Barrel(models.Model):
+    id = models.CharField(max_length=50, primary_key=True)
     barrel_set = models.ForeignKey(BarrelSet, on_delete=models.CASCADE)
     wood_type = models.CharField(max_length=50)
     capability = models.PositiveIntegerField()
 
 
 class OperationType(models.Model):
-    name = models.CharField(max_length=50, primary_key=True)
+    id = models.CharField(max_length=50, primary_key=True)
     schema = JSONField(default=[])
 
 
