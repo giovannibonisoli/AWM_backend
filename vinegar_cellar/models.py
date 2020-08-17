@@ -27,6 +27,8 @@ class Barrel(models.Model):
 
 class OperationType(models.Model):
     id = models.CharField(max_length=50, primary_key=True)
+    name = models.CharField(max_length=50)
+    description = models.TextField()
     schema = JSONField(default=[])
 
 
