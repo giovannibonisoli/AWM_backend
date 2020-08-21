@@ -13,9 +13,9 @@ class BarrelSetViewSet(viewsets.ModelViewSet):
     queryset = BarrelSet.objects.all()
 
 
-class BarrelViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin,
-                    mixins.RetrieveModelMixin, mixins.DestroyModelMixin,
-                    viewsets.GenericViewSet):
+class BarrelViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
+                    mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
+                    mixins.DestroyModelMixin, viewsets.GenericViewSet):
     serializer_class = BarrelSerializer
     queryset = Barrel.objects.all()
 
