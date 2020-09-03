@@ -13,14 +13,30 @@ class BarrelSetViewSet(viewsets.ModelViewSet):
     queryset = BarrelSet.objects.all()
 
 
-class BarrelViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
+class BarrelViewSet(mixins.ListModelMixin,
                     mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
                     mixins.DestroyModelMixin, viewsets.GenericViewSet):
     serializer_class = BarrelSerializer
     queryset = Barrel.objects.all()
 
+    def create(self, request):
+        res = self.queryset.filter(barrel_set=request.data['barrel_set']).last()
+        item = request.data
+        if res is None:
+            item['id'] = ('BAR' + str(request.data['barrel_set']).zfill(2) +
+                          '01')
+        else:
+            item['id'] = ('BAR' + str(request.data['barrel_set']).zfill(2) +
+                          str(int(res.id[5:]) + 1).zfill(2))
+
+        serializer = self.get_serializer(data=item)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        return Response(data=model_to_dict(instance),
+                        status=status.HTTP_201_CREATED)
+
     @action(detail=False, url_path='set/(?P<pk>[^/.]+)')
-    def operation_list(self, request, pk):
+    def filtered_list(self, request, pk):
         res = Barrel.objects.filter(barrel_set=pk)
         serializer = self.get_serializer(res, many=True)
         return Response(serializer.data)
