@@ -1,5 +1,4 @@
 from django.db import models
-from jsonfield import JSONField
 from django.core.validators import MaxValueValidator, MinValueValidator
 import datetime
 
@@ -29,11 +28,11 @@ class OperationType(models.Model):
     id = models.CharField(max_length=50, primary_key=True)
     name = models.CharField(max_length=50)
     description = models.TextField()
-    schema = JSONField(default=[])
+    schema = models.JSONField()
 
 
 class Operation(models.Model):
     type = models.ForeignKey(OperationType, on_delete=models.CASCADE)
     barrel = models.ForeignKey(Barrel, on_delete=models.CASCADE)
     date = models.DateField()
-    values = JSONField(default=[])
+    values = models.JSONField()
