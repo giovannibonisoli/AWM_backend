@@ -6,6 +6,68 @@ from datetime import datetime
 from vinegar_cellar.models import BarrelSet, Barrel, OperationType, Operation
 
 
+class BarrelTests(APITestCase):
+
+    def setUp(self):
+        self.username = 'john_doe'
+        self.password = 'foobar'
+        self.user = User.objects.create(username=self.username,
+                                        password=self.password)
+        self.client.force_authenticate(user=self.user)
+
+        for number in range(1, 3):
+            BarrelSet.objects.create(id=number, year=(number+1991))
+
+    def test_create_1(self):
+        data = {
+            'barrel_set': 1,
+            'wood_type': 'Ciliegio',
+            'capability': 40
+        }
+        response = self.client.post('/api/barrel/', data=data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['id'], 'BAR0101')
+
+    def test_create_2(self):
+        bar_set = BarrelSet.objects.get(pk=1)
+        Barrel.objects.create(id='BAR0102', barrel_set=bar_set,
+                              wood_type='Rovere', capability=70)
+        data = {
+            'barrel_set': 1,
+            'wood_type': 'Ciliegio',
+            'capability': 40
+        }
+        response = self.client.post('/api/barrel/', data=data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['id'], 'BAR0103')
+
+    def test_get_set(self):
+        bar_set = BarrelSet.objects.all()
+        for i, wood in enumerate(['Ciliegio', 'Ginepro', 'Gelso']):
+            id = 'BAR' + str(bar_set[0].id).zfill(2) + str(i).zfill(2)
+            Barrel.objects.create(id=id, barrel_set=bar_set[0],
+                                  wood_type=wood, capability=70)
+
+        response = self.client.get('/api/barrel/set/{}/'.format(bar_set[0].id),
+                                   format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+        for i, wood in enumerate(['Ciliegio', 'Ginepro']):
+            id = 'BAR' + str(bar_set[1].id).zfill(2) + str(i).zfill(2)
+            Barrel.objects.create(id=id, barrel_set=bar_set[1],
+                                  wood_type=wood, capability=70)
+
+        response = self.client.get('/api/barrel/set/{}/'.format(bar_set[1].id),
+                                   format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+
 class OperationTests(APITestCase):
 
     def setUp(self):
