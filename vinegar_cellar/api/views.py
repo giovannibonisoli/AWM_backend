@@ -101,4 +101,4 @@ class OperationViewSet(viewsets.GenericViewSet):
 
         elif request.method == 'DELETE':
             operation.delete()
-            return Response(status=204)
+            return Response(status=status.HTTP_204_NO_CONTENT)
