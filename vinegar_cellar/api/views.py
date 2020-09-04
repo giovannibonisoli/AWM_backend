@@ -42,19 +42,9 @@ class BarrelViewSet(mixins.ListModelMixin,
         return Response(serializer.data)
 
 
-class BarrelModelSet(viewsets.ModelViewSet):
-    serializer_class = BarrelSerializer
-    queryset = Barrel.objects.all()
-
-
 class OperationTypeViewSet(viewsets.ModelViewSet):
     serializer_class = OperationTypeSerializer
     queryset = OperationType.objects.all()
-
-
-class OperationModelSet(viewsets.ModelViewSet):
-    serializer_class = OperationSerializer
-    queryset = Operation.objects.all()
 
 
 class OperationViewSet(viewsets.GenericViewSet):
